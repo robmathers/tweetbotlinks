@@ -7,7 +7,7 @@
 	<key>Builder Version</key>
 	<string>8536.30.1</string>
 	<key>CFBundleDisplayName</key>
-	<string>TweetbotLinks</string>
+	<string>Open in Tweetbot</string>
 	<key>CFBundleIdentifier</key>
 	<string>ca.grmm.tweetbotlinks</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -26,6 +26,8 @@
 		<key>Scripts</key>
 		<dict/>
 	</dict>
+	<key>Description</key>
+	<string>Opens Twitter links in Tweetbot for Mac.</string>
 	<key>ExtensionInfoDictionaryVersion</key>
 	<string>1.0</string>
 	<key>Permissions</key>
@@ -38,5 +40,9 @@
 			<string>All</string>
 		</dict>
 	</dict>
+	<key>Update Manifest URL</key>
+	<string>http://grmm.ca/extensionupdates.plist</string>
+	<key>Website</key>
+	<string>https://github.com/robmathers/tweetbotlinks</string>
 </dict>
 </plist>
