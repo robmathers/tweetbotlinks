@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TweetbotLinks Global Extension Page</title>
+    <script type="text/javascript">
+        var twitterRegExp = /^https?:\/\/(www|mobile)?\.?twitter\.com\//;
+
+        function tweetbotNavigateHandler(event) {
+            // event.target.url !== "" is used to allow direct entry URLs and pages opened externally to navigate as expected
+            if (shouldHandleURL(event)) {
+                console.log('Matched URL:', event.url);
+                // Create a new Tweetbot URL
+                var newurl = processTwitterURL(event.url);
+                console.log('Modified URL:', newurl);
+                event.preventDefault(); // Stop navigation
+                event.target.url = newurl; // Go to the new url
+            }
+        }
+
+        function shouldHandleURL(event) {
+        // Returns true if this is a URL that Tweetbot should handle
+            var url = event.url;
+            var targetURL = event.target.url;
+            if (url === null) {
+                return false;
+            }
+            // Don't act when the target is empty. This allows opening Twitter URLs in Safari from external apps (i.e. Tweetbot's Open in Safari function)
+            if (targetURL === undefined | targetURL === "") {
+                return false;
+            }
+            // If the current page is a Twitter site, don't handle it
+            if (targetURL.match(/^https?:\/\/(.*(?=\.))?\.?twitter\.com(\/|$)/)) {
+                return false;
+            }
+            if (url.match(/^https?:\/\/(www|mobile)?\.?twitter\.com\//)) {
+                var path = url.replace(/^https?:\/\/(www|mobile)?\.?twitter\.com\//, '');
+                var tweetbot = false;
+                if (path.match(/\/status\/\d+/)) { // status url
+                    tweetbot = true;
+                }
+                else if (path.match(/^[0-9a-z_]+\/?$/i)) { // username only
+                    tweetbot = true;
+                }
+                else if (path.match(/^search\?/)) { // search url
+                    tweetbot = true;
+                }
+
+                return tweetbot;
+            }
+
+            return false; // Don't send URLs to Tweetbot by default
+        }
+
+        function processTwitterURL(url) {
+            url = url.replace(twitterRegExp, '');
+            url = url.replace('#!/', ''); // Fix for old hashbang URLs
+            if (url.match(/\/status\/\d+/)) { // status url
+                // no modifications need to be done
+            }
+            else if (url.match(/^[0-9a-z_]+\/?$/i)) { // username only
+                url = '/user_profile/' + url;
+            }
+            else if (url.match(/^search\?/)) { // search url
+                url = '/' + url;
+                url = url.replace('q=', 'query=');
+            }
+
+            return 'tweetbot://' + url;
+        }
+
+        safari.application.addEventListener("beforeNavigate", tweetbotNavigateHandler, true);
+    </script>
+</head>
+<body>
+</body>
+</html>
