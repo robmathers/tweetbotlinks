@@ -4,6 +4,9 @@
     <title>TweetbotLinks Global Extension Page</title>
     <script type="text/javascript">
         var twitterRegExp = /^https?:\/\/(www|mobile)?\.?twitter\.com\//;
+        var statusRegExp = /\/status(es)?\/\d+/;
+        var userRegExp = /^[0-9a-z_]+\/?$/i;
+        var searchRegExp = /^search\?/;
 
         function tweetbotNavigateHandler(event) {
             // event.target.url !== "" is used to allow direct entry URLs and pages opened externally to navigate as expected
@@ -35,13 +38,13 @@
             if (url.match(/^https?:\/\/(www|mobile)?\.?twitter\.com\//)) {
                 var path = url.replace(/^https?:\/\/(www|mobile)?\.?twitter\.com\//, '');
                 var tweetbot = false;
-                if (path.match(/\/status\/\d+/)) { // status url
+                if (path.match(statusRegExp)) { // status url
                     tweetbot = true;
                 }
-                else if (path.match(/^[0-9a-z_]+\/?$/i)) { // username only
+                else if (path.match(userRegExp)) { // username only
                     tweetbot = true;
                 }
-                else if (path.match(/^search\?/)) { // search url
+                else if (path.match(searchRegExp)) { // search url
                     tweetbot = true;
                 }
 
@@ -54,13 +57,13 @@
         function processTwitterURL(url) {
             url = url.replace(twitterRegExp, '');
             url = url.replace('#!/', ''); // Fix for old hashbang URLs
-            if (url.match(/\/status\/\d+/)) { // status url
-                // no modifications need to be done
+            if (url.match(statusRegExp)) {
+                url = url.replace('/statuses/', '/status/'); // Tweetbot only accepts /status/
             }
-            else if (url.match(/^[0-9a-z_]+\/?$/i)) { // username only
+            else if (url.match(userRegExp)) {
                 url = '/user_profile/' + url;
             }
-            else if (url.match(/^search\?/)) { // search url
+            else if (url.match(searchRegExp)) {
                 url = '/' + url;
                 url = url.replace('q=', 'query=');
             }
