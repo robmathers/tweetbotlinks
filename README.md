@@ -8,6 +8,7 @@ Any URLs opened in new tabs or windows (either manually typed in or opened via a
 Any feedback, bug reports or feature requests are welcome, please do so by [opening a new issue][issues] for the project.
 
 ## Version History
+- **1.0.1**: Now recognizes old style `/statuses/` URLs.
 - **1.0.0**: Initial release.
 
 [releases]: https://github.com/robmathers/tweetbotlinks/releases/
